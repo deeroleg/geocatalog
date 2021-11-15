@@ -1,5 +1,5 @@
 """
- View для отображения дерева регионов и создания регионов
+ View для редактирования города
 """
 
 from flask import jsonify, request, abort
