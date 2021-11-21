@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 
 from geocatalog.models.base import BaseModel
 from geocatalog.models.city import City
@@ -8,7 +8,8 @@ class Region(BaseModel):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    parent_id = Column(Integer)
+    parent_id = Column(Integer, ForeignKey("regions.id"))
+    
 
     def __init__(self, name, parent_id):
         self.name = name
@@ -23,6 +24,21 @@ class Region(BaseModel):
             .filter(City.region_id == self.id)
             .first()
         )
+    
+    def list_childs_cities(self):
+        """Возвращает список городо дочерних регионов"""
+        
+        ids = self._list_childs_ids()
+        if len(ids):
+            return (
+                City.dm()
+                .filter(City.region_id.in_(ids))
+                .order_by(City.id.asc())
+                .all()
+            )
+        
+        return []
+        
     
     def list_childs(self):
         """Возвращает список дочерних регионов"""
@@ -51,6 +67,15 @@ class Region(BaseModel):
             self._cities_ = cities
             
         return self._cities_
+    
+    def _list_childs_ids(self):
+        """Получение идентификаторов всех дочерних регионов"""
+        result = []
+        for child in self.list_childs():
+            result.append(child.id)
+            result = result + child._list_childs_ids()
+            
+        return result
     
     def serialize(self, full=False, with_childs=True):
         """Сериализация документа в json"""

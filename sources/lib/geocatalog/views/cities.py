@@ -11,12 +11,9 @@ from geocatalog.models.city import City
 
 class CitiesView(View):
 
-    methods = ['POST']
+    methods = ['GET', 'POST']
 
     def dispatch_request(self, region_id):
-        """Создание города в регионе. 
-        """
-
         region = (
             Region.dm()
             .filter(Region.id == region_id)
@@ -25,7 +22,27 @@ class CitiesView(View):
         
         if not region:
             return abort(404)
+
+        if request.method == 'POST':
+            return self._create_city(region)
         
+        lst = region.list_cities()
+        
+        result = []
+        
+        if not len(lst):
+            lst = region.list_childs_cities()
+            
+        for doc in lst:
+            result.append(doc.serialize(with_region=True))
+        
+        return jsonify(result)
+        
+        
+    def _create_city(self, region):
+        """Создание города в регионе. 
+        """
+
         result = {'success': 'false'}
 
         content = request.get_json(silent=True)

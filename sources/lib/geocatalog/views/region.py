@@ -27,7 +27,11 @@ class RegionView(View):
         
         result = {'success': 'false'}
         if request.method == 'DELETE':
-            if region.delete():
+            childs = region.list_childs()
+            cities = region.list_cities()
+            if len(childs) or len(cities):
+                result['error'] = 'Region already has cties or childs regions'
+            elif region.delete():
                 result['success'] = True
         else:
             result = region.serialize(full=True)
@@ -58,6 +62,16 @@ class RegionView(View):
             
             if not parent:
                 result['error'] = 'Invalid parent region id'
+            else:
+                tree = Region.get_regions_tree()
+                pid = int(content.get('parent_id'))
+                while pid:
+                    if pid == region.id:
+                        result['error'] = 'Cirdular reference for parent region id'
+                        break
+                    else:
+                        pid = tree.get(pid).parent_id if tree.get(pid) else None
+                            
                 
         
         if not result.get('error'):

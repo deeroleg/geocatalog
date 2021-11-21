@@ -4,8 +4,9 @@ import sys
 home = os.environ['PROJECT_HOME']
 sys.path.append(home + '/geocatalog/sources/lib')
 
-from flask import Flask, abort, jsonify
+from flask import Flask
 
+from geocatalog.service import get_service
 from geocatalog.service import ConfigService, KeeperService
 from geocatalog.routes import main_routes
 
@@ -13,6 +14,7 @@ from geocatalog.routes import main_routes
 app = Flask(__name__)
 
 config = ConfigService(home + os.environ['CFG_FILE'])
+config.register()
 
 keeper = KeeperService()
 keeper.init_db(
@@ -23,6 +25,14 @@ keeper.init_db(
     password=config['database']['password']
 )
 keeper.register()
+
+@app.before_request
+def before_request():
+    get_service('keeper').connect()
+
+@app.teardown_request
+def teardown_request(e):
+    get_service('keeper').cleanup()
 
 for view_id in main_routes:
     view_class = main_routes[view_id]['class']
