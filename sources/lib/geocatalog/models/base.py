@@ -12,7 +12,7 @@ class BaseModel(Base):
     def dm(cls):
         return get_service('keeper').get_db_session().query(cls)
 
-    def store(self, modified=[]):
+    def store(self):
         db_session = get_service('keeper').get_db_session()
 
         db_session.add(self)
