@@ -2,24 +2,24 @@
  Описание роутов приложения
 """
 
-import geocatalog.views
+from geocatalog import views
 
 
 main_routes = {
     'regions': {
-        'class': geocatalog.views.RegionsView,
+        'class': views.RegionsView,
         'rules': ['/regions/']
     },
     'region': {
-        'class': geocatalog.views.RegionView,
+        'class': views.RegionView,
         'rules': ['/regions/<region_id>/']
     },
     'region_cities': {
-        'class': geocatalog.views.CitiesView,
+        'class': views.CitiesView,
         'rules': ['/regions/<region_id>/cities/']
     },
     'city': {
-        'class': geocatalog.views.CityView,
+        'class': views.CityView,
         'rules': ['/regions/<region_id>/cities/<city_id>/']
     },
 }

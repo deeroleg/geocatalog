@@ -1,0 +1,13 @@
+[flake8]
+max-line-length = 99
+per-file-ignores =
+    __init__.py:F401
+    app.py:E402
+    manage.py:E402, F401
+exclude =
+	__pycache__,
+    migrations
+
+[pycodestyle]
+max-line-length = 99
+select = W291,W293,W391,E201,E202,E203,E225,E231,E302,E303,E305,E703

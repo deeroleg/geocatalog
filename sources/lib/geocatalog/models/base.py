@@ -1,29 +1,22 @@
-from sqlalchemy.ext.declarative import declarative_base
+from geocatalog import db
 
-from geocatalog.service import get_service
 
-Base = declarative_base()
-
-class BaseModel(Base):
+class BaseModel(db.Model):
 
     __abstract__ = True
 
     @classmethod
     def dm(cls):
-        return get_service('keeper').get_db_session().query(cls)
+        return cls.query
 
     def store(self):
-        db_session = get_service('keeper').get_db_session()
-
-        db_session.add(self)
-        db_session.commit()
+        db.session.add(self)
+        db.session.commit()
 
         return True
 
     def delete(self):
-        db_session = get_service('keeper').get_db_session()
-
-        db_session.delete(self)
-        db_session.commit()
+        db.session.delete(self)
+        db.session.commit()
 
         return True

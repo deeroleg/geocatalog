@@ -2,6 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 
 from geocatalog.models.base import BaseModel
 
+
 class City(BaseModel):
     __tablename__ = 'cities'
 
@@ -17,11 +18,11 @@ class City(BaseModel):
         """Сериализация документа в json"""
 
         res = {
-            'id': self.id, 
+            'id': self.id,
             'name': self.name,
         }
-        
+
         if with_region:
             res['region_id'] = self.region_id
-        
+
         return res

@@ -1,0 +1,6 @@
+database:
+    host: 127.0.0.1
+    port: 5432
+    name: geocatalog_new
+    user: geo_user
+    password: pwd

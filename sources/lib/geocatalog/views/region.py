@@ -18,13 +18,13 @@ class RegionView(View):
             .filter(Region.id == region_id)
             .first()
         )
-        
+
         if not region:
             return abort(404)
-        
+
         if request.method == 'PUT':
             return self._update_region(region)
-        
+
         result = {'success': 'false'}
         if request.method == 'DELETE':
             childs = region.list_childs()
@@ -35,22 +35,22 @@ class RegionView(View):
                 result['success'] = True
         else:
             result = region.serialize(full=True)
-        
+
         return jsonify(result)
-    
+
     def _update_region(self, region):
-        """Изменение региона из json тела запроса. 
-        Подразумевается, что передано название и опционально parent_id, 
+        """Изменение региона из json тела запроса.
+        Подразумевается, что передано название и опционально parent_id,
         если parent_id не передано, то регион станет регионом верхнего уровня
         Пример {"name": "Рязанская область", "parent_id": 1}
         """
         content = request.get_json(silent=True)
-        
+
         if not content:
             return abort(404)
-        
+
         result = {'success': 'false'}
-        
+
         if not content.get('name'):
             result['error'] = 'Name not specified'
         if content.get('parent_id'):
@@ -59,7 +59,7 @@ class RegionView(View):
                 .filter(Region.id == content.get('parent_id'))
                 .first()
             )
-            
+
             if not parent:
                 result['error'] = 'Invalid parent region id'
             else:
@@ -71,17 +71,14 @@ class RegionView(View):
                         break
                     else:
                         pid = tree.get(pid).parent_id if tree.get(pid) else None
-                            
-                
-        
+
         if not result.get('error'):
             region.name = content.get('name')
             region.parent_id = content.get('parent_id')
-            
+
             if region.store():
                 result['success'] = True
             else:
                 result['error'] = 'System error'
-                
+
         return jsonify(result)
-            
