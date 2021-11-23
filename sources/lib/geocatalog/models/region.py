@@ -85,6 +85,9 @@ class Region(BaseModel):
         }
 
         if full:
+            if self.parent_id:
+                result['parent_id'] = self.parent_id
+                
             cities = self.list_cities()
             if len(cities):
                 result['cities'] = []

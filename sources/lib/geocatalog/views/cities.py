@@ -5,8 +5,7 @@
 from flask import jsonify, request, abort
 from flask.views import View
 
-from geocatalog.models.region import Region
-from geocatalog.models.city import City
+from geocatalog.models import Region, City
 
 
 class CitiesView(View):
@@ -42,14 +41,14 @@ class CitiesView(View):
         """Создание города в регионе.
         """
 
-        result = {'success': 'false'}
+        result = {'success': False}
 
         content = request.get_json(silent=True)
 
         if not content:
             return abort(404)
 
-        result = {'success': 'false'}
+        result = {'success': False}
 
         if not content.get('name'):
             result['error'] = 'Name not specified'

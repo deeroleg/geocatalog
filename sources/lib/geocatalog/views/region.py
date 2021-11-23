@@ -4,8 +4,7 @@
 
 from flask import jsonify, request, abort
 from flask.views import View
-
-from geocatalog.models.region import Region
+from geocatalog.models import Region
 
 
 class RegionView(View):
@@ -25,7 +24,7 @@ class RegionView(View):
         if request.method == 'PUT':
             return self._update_region(region)
 
-        result = {'success': 'false'}
+        result = {'success': False}
         if request.method == 'DELETE':
             childs = region.list_childs()
             cities = region.list_cities()
@@ -49,7 +48,7 @@ class RegionView(View):
         if not content:
             return abort(404)
 
-        result = {'success': 'false'}
+        result = {'success': False}
 
         if not content.get('name'):
             result['error'] = 'Name not specified'

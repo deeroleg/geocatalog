@@ -5,7 +5,7 @@
 from flask import jsonify, request, abort
 from flask.views import View
 
-from geocatalog.models.region import Region
+from geocatalog.models import Region
 
 
 class RegionsView(View):
