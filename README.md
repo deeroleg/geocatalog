@@ -24,6 +24,26 @@ Flask-Script==2.0.6
 Flask-migrate==2.5.2
 Flask-sqlalchemy==2.5.1
 
+## Миграция
+Необходимо установить следующие перенеммые окружения
+	export PROJECT_HOME=/home/oleg/work/tests
+	export CFG_FILE=/geocatalog/conf/dev.yaml
+	export FLASK_APP=app.py 
+
+Для генерации миграционных скриптов, необходимо в каталоге проекта выполнить команду
+	$ python manage.py db migrate
+Для применения всех миграцй, необходимо в каталоге проекта выполнить команду
+	$ python manage.py db upgrade
+	
+## Тестирование
+Необходимо установить следующие перенеммые окружения
+	export PROJECT_HOME=/home/oleg/work/tests
+	export CFG_FILE=/geocatalog/conf/test.yaml
+	export FLASK_APP=app.py 
+
+Запуск тестов
+	$ python tests.py
+
 ## API Methods
 
 - GET /regions/ - просмотр всех регионов в виде дерева
